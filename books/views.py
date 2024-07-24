@@ -1,6 +1,7 @@
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 # from django.views import View
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import DeleteView, ListView, CreateView, DetailView, UpdateView
 from books.models import Book
 
 class BookListView(ListView):
@@ -22,21 +23,18 @@ class BookDetailView(DetailView):
     context_object_name = 'book'
 
 
+class BookUpdateView(UpdateView):
+    model = Book
+    fields = ['name', 'author', 'image', 'description']
+    template_name = 'book_update.html'
+    success_url = '/create/success'
+
+
+class BookDeleteView(DeleteView):
+    model = Book
+    template_name = 'book_delete.html'
+    success_url = reverse_lazy('home')
+
 def success(request):
     return render(request, 'success.html')
 
-
-
-
-# def index(request):
-#     book = Book.objects.all()
-#     return render(request, 'index.html', {'books': book})
-
-# def create(request):
-#     if request.POST:
-#         name = request.POST.get('name')
-#         author = request.POST.get('author')
-#         book = Book(name=name, author=author)
-#         book.save()
-#         return redirect('home')
-#     return render(request, 'create.html')
